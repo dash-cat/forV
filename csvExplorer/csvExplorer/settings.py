@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,6 +26,18 @@ SECRET_KEY = 'django-insecure-b5+u!pi$b-bh9l^i$q-*y9u6v@+o0u0(&-a*v&ocz&*sgpj)1@
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
+# Определение базового пути проекта
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Настройка MEDIA_ROOT
+# Это путь, где будут храниться все загруженные файлы.
+# Например, 'media' будет поддиректорией в корне вашего проекта.
+# URL, по которому будут доступны медиа-файлы
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 # Application definition
@@ -77,7 +89,7 @@ WSGI_APPLICATION = 'csvExplorer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
