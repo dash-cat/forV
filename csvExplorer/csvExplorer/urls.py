@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django import views
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+
+from .views import FileUploadView
 
 urlpatterns = [
-    path('upload/', views.file_upload_view, name='file_upload'),
+    path('upload/', FileUploadView.as_view(), name='file_upload'),
     path('admin/', admin.site.urls),
+    # path('csvExplorer/', include('csvExplorer.urls')),
 ]
