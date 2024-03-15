@@ -5,7 +5,7 @@ from .models import UploadedFile
 import pandas as pd
 
 class FileUploadView(FormView):
-    template_name = 'upload.html'  # Укажите путь к вашему шаблону
+    template_name = 'index.html'  # Укажите путь к вашему шаблону
     form_class = UploadFileForm
     success_url = '/'  # URL для перенаправления после успешной загрузки
 
