@@ -19,12 +19,10 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
 
-from .views import FileUploadView, success_view, upload_success
+from .views import FileUploadView, success_view
 
 urlpatterns = [
     path('upload/', FileUploadView.as_view(), name='file_upload'),
     path('admin/', admin.site.urls),
-    path('upload_success/', upload_success, name='upload_success'),
-    path('success/', success_view, name='success'),
-    # pateh('csvExplorer/', include('csvExplorer.urls')),
+    path('success/', success_view, name='success_view'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

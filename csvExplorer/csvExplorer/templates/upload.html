@@ -9,5 +9,11 @@
         {{ form.as_p }}
         <button type="submit">Upload</button>
     </form>
+    {% if graph_paths %}
+    <h2>Созданные графики:</h2>
+    {% for graph_path in graph_paths %}
+        <img src="{{ graph_path }}" alt="Graph" style="max-width: 600px; max-height: 400px;">
+    {% endfor %}
+    {% endif %}
 </body>
 </html>

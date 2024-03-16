@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Загруженные файлы</title>
+</head>
+<body>
+    <h1>Загруженные файлы</h1>
+    <ul>
+        {% for file in uploaded_files %}
+            <li>
+                {{ file.file_name }} -<a href="{{ MEDIA_URL }}{{ file.graph_path }}" target="_blank">Посмотреть график</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
