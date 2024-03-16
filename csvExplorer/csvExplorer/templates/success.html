@@ -9,7 +9,8 @@
     <ul>
         {% for file in uploaded_files %}
             <li>
-                {{ file.file_name }} -<a href="{{ MEDIA_URL }}{{ file.graph_path }}" target="_blank">Посмотреть график</a>
+                {{ file.file_name }} - <a href="{{ file.graph_path }}" target="_blank">Посмотреть график</a>
+                - <a href="{% url 'file_delete' file.id %}">Удалить</a>  <!-- Ссылка на удаление -->
             </li>
         {% endfor %}
     </ul>

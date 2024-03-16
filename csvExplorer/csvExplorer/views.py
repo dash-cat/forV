@@ -13,9 +13,16 @@ from matplotlib import pyplot as plt
 matplotlib.use('Agg')
 from .forms import UploadFileForm
 from .models import UploadedFile
+from django.shortcuts import get_object_or_404, redirect
+from .models import UploadedFile
 
 def upload_success(request):
     return HttpResponse("Файл успешно загружен!")
+ 
+def file_delete(request, pk):
+    file_to_delete = get_object_or_404(UploadedFile, pk=pk)
+    file_to_delete.delete()
+    return redirect('success_view')  # Возвращаемся на страницу со списком
 
 class FileUploadView(FormView):
     template_name = 'upload.html'
@@ -37,6 +44,7 @@ class FileUploadView(FormView):
         
         return redirect('success_view') 
 
+        
 
     def save_uploaded_file(self, uploaded_file):
         file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
@@ -65,9 +73,15 @@ class FileUploadView(FormView):
 
     def process_csv_file(self, file_path, original_file_name):
         df = pd.read_csv(file_path)
-        numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
-        graph_paths = []  # Список для хранения путей к созданным графикам
         
+        # Получаем общие данные о файле
+        file_size = os.path.getsize(file_path)  # Вес файла в байтах
+        num_rows = df.shape[0]  # Количество строк
+        data_types = df.dtypes.to_dict()  # Типы данных внутри
+        
+        numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
+        graph_paths = []
+
         for column in numeric_columns:
             plt.figure()
             x = np.arange(len(df[column]))
@@ -87,9 +101,18 @@ class FileUploadView(FormView):
             
             relative_graph_path = os.path.relpath(graph_path, settings.MEDIA_ROOT)
             graph_paths.append(relative_graph_path)
-            UploadedFile.objects.create(file_name=original_file_name, graph_path=relative_graph_path)
-        
-        return graph_paths  # Возвращаем список путей к созданным графикам
+
+        # Создаем запись в базе данных с дополнительной информацией
+        uploaded_file = UploadedFile.objects.create(
+            file_name=original_file_name,
+            graph_path=relative_graph_path,
+            file_size=file_size,  # Добавляем размер файла
+            num_rows=num_rows,  # Добавляем количество строк
+            data_types=str(data_types)  # Сохраняем типы данных как строку
+        )
+
+        # Возвращаем информацию для отображения в шаблоне
+        return graph_paths, file_size, num_rows, data_types
 
 def success_view(request):
     uploaded_files = UploadedFile.objects.all()
