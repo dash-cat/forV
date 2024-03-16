@@ -112,6 +112,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Путь, где будут храниться собранные статические файлы
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# URL, по которому будут доступны статические файлы
+STATIC_URL = '/static/'
+
+# Дополнительные пути, где Django будет искать статические файлы, в дополнение к тем, что находятся в каждом приложении
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
