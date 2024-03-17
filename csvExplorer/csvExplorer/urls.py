@@ -19,11 +19,13 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
 
-from .views import FileUploadView, success_view, file_delete
+from .views import FileUploadView, success_view, file_delete, upload_success
 
 urlpatterns = [
     path('upload/', FileUploadView.as_view(), name='file_upload'),
     path('admin/', admin.site.urls),
     path('success/', success_view, name='success_view'),
-    path('file_delete/<int:pk>/', file_delete, name='file_delete'),
+    path('upload_success/', upload_success, name='upload_success'),
+    path('file_delete/<int:file_id>/', file_delete, name='file_delete'),
+    path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
