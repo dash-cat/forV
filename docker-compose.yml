@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  forv:
+    image: forv
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 6635:6635

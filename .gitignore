@@ -1,5 +1,8 @@
 .metals
 .vscode
 ./db.sqlite3
-./csvExplorer/migrations/*
-./csvExplorer/static/*
+migrations/*
+static/*
+node_modules
+media
+__pycache__

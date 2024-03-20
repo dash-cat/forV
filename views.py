@@ -23,7 +23,6 @@ def file_delete(request, file_id):
     try:
         file_to_delete = UploadedFile.objects.get(id=file_id)
         file_to_delete.delete()
-        # После удаления перенаправляем пользователя на нужную страницу
         return HttpResponseRedirect('/success/')
     except UploadedFile.DoesNotExist:
         # Обработка случая, когда файл не найден
@@ -67,19 +66,22 @@ class FileUploadView(FormView):
     def  process_zip_file(self, file_path, original_file_name):
         temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp', original_file_name)
         os.makedirs(temp_dir, exist_ok=True)
+    
+        try:
+            with zipfile.ZipFile(file_path, 'r') as zip_ref:
+                zip_ref.extractall(temp_dir)
+                for filename in zip_ref.namelist():
+                    if filename.endswith('.csv'):
+                        print('zip_ref', zip_ref)
+                        self.process_csv_file(os.path.join(temp_dir, filename), original_file_name)
+        except Exception as e:
+            print("Exeption", e)
         
-        with zipfile.ZipFile(file_path, 'r') as zip_ref:
-            zip_ref.extractall(temp_dir)
-            for filename in zip_ref.namelist():
-                if filename.endswith('.csv'):
-                    self.process_csv_file(os.path.join(temp_dir, filename), original_file_name)
-        
-        # Очистка временной директории после обработки
         for filename in os.listdir(temp_dir):
             file_path = os.path.join(temp_dir, filename)
             os.remove(file_path)
         os.rmdir(temp_dir)
-        return []  # Возвращаем пустой список, если нет графиков
+        return []
 
 
     
@@ -124,13 +126,14 @@ class FileUploadView(FormView):
 
                 graph_filename = f'{original_file_name}_{column}_graph.png'
                 graph_path = os.path.join(settings.MEDIA_ROOT, graph_filename)
+            if graph_path:
                 plt.savefig(graph_path)
                 plt.close()
 
                 relative_graph_path = os.path.relpath(graph_path, settings.MEDIA_ROOT)
                 relative_graph_paths.append(relative_graph_path)
             else:
-                graph_path = plot_categorical_data(df, column, original_file_name) 
+                # Tgraph_path = plot_categorical_data(df, column, original_file_name) 
                 if graph_path:
                     relative_graph_paths.append(graph_path)
 
@@ -151,32 +154,32 @@ def success_view(request):
        return HttpResponseRedirect(reverse_lazy('file_upload'))
     return render(request, 'success.html', {'uploaded_files': uploaded_files})
 
-def plot_categorical_data(df, column_name, original_file_name):
-    # Проверяем, содержит ли столбец нечисловые данные
-    if df[column_name].dtype == object:
-        # Подсчитываем количество значений каждой категории
-        value_counts = df[column_name].value_counts()
+# def plot_categorical_data(df, column_name, original_file_name):
+#     # Проверяем, содержит ли столбец нечисловые данные
+#     if df[column_name].dtype == object:
+#         # Подсчитываем количество значений каждой категории
+#         value_counts = df[column_name].value_counts()
         
-        # Создаем столбчатую диаграмму
-        plt.figure(figsize=(10, 6))
-        try:
-            print(df, column_name, original_file_name)
-            print("plot")
-            value_counts.plot(kind='bar')
-        except:
-            print("aaaaqaaaaaaaa")
-        plt.title(f'Распределение категорий для {column_name}')
-        plt.xlabel('Категория')
-        plt.ylabel('Количество')
-        plt.xticks(rotation=45)
+#         # Создаем столбчатую диаграмму
+#         plt.figure(figsize=(10, 6))
+#         try:
+#             print(df, column_name, original_file_name)
+#             print("plot")
+#             value_counts.plot(kind='bar')
+#         except:
+#             print("aaaaqaaaaaaaa")
+#         plt.title(f'Распределение категорий для {column_name}')
+#         plt.xlabel('Категория')
+#         plt.ylabel('Количество')
+#         plt.xticks(rotation=45)
         
-        # Сохраняем график
-        graph_filename = f'{original_file_name}_{column_name}_category_distribution.png'
-        graph_path = os.path.join(settings.MEDIA_ROOT, graph_filename)
-        plt.tight_layout()
-        plt.savefig(graph_path)
-        plt.close()
+#         # Сохраняем график
+#         graph_filename = f'{original_file_name}_{column_name}_category_distribution.png'
+#         graph_path = os.path.join(settings.MEDIA_ROOT, graph_filename)
+#         plt.tight_layout()
+#         plt.savefig(graph_path)
+#         plt.close()
 
-        return os.path.relpath(graph_path, settings.MEDIA_ROOT)
-    else:
-        return None
+#         return os.path.relpath(graph_path, settings.MEDIA_ROOT)
+#     else:
+#         return None

@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  forv:
+    image: forv
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 csvExplorer/manage.py runserver 0.0.0.0:6635 --nothreading --noreload && dashed.py"]
+    ports:
+      - 6635:6635
+      - 5678:5678

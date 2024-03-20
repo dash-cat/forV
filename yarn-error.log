@@ -1,0 +1,41 @@
+Arguments: 
+  /usr/local/bin/node /snap/node/8286/bin/yarn.js install
+
+PATH: 
+  /usr/lib/jvm/java-21-openjdk-amd64/bin:/home/griggy/.sdkman/candidates/sbt/current/bin:/home/griggy/.sdkman/candidates/java/current/bin:/home/griggy/.local/bin:/home/griggy/.local/bin:/home/griggy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/opt/jadx/bin:/opt/jadx/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  21.2.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: ENOSPC: no space left on device, copyfile '/home/griggy/.cache/yarn/v6/npm-@parcel-rust-2.12.0-135df4dd8c63d97720379777c5bb4a2680a201cd-integrity/node_modules/@parcel/rust/parcel-node-bindings.darwin-arm64.node' -> '/home/griggy/Documents/forV/csvExplorer/csvExplorer/node_modules/@parcel/rust/parcel-node-bindings.darwin-arm64.node'
+
+npm manifest: 
+  {
+      "name": "chartjs-example",
+      "version": "1.0.0",
+      "license": "MIT",
+      "scripts": {
+        "dev": "parcel ./src/index.html",
+        "build": "parcel build ./src/index.html"
+      },
+      "devDependencies": {
+        "parcel": "^2.6.2"
+      },
+      "dependencies": {
+        "@cubejs-client/core": "^0.31.0",
+        "chart.js": "^4.0.0"
+      }
+    }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
