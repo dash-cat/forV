@@ -6,3 +6,6 @@ static/*
 node_modules
 media
 __pycache__
+csvExplorer/migrations
+csvExplorer/static
+csvExplorer/uploads
